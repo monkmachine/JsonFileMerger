@@ -1,10 +1,11 @@
-package JsonFileMerger;
+package jsonFileMerger;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import com.fasterxml.jackson.core.JsonEncoding;
@@ -14,22 +15,22 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.TreeNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class jsonFileMerger {
+public class JsonFileMerger {
 
 	private JsonFactory jfactory = new JsonFactory();
+	private String OutputFolder;
+	private String SoftType;
+	private String InputFolder;
+	private ObjectMapper mapper = new ObjectMapper();
+	public void execute() throws IOException {
 
-	public void main(String args[]) throws IOException {
 
-		String InputFolder = args[0];
-		String OutputFolder = args[1];
-		String SoftType = args[2];
 		FileOutputStream fos = new FileOutputStream(new File(OutputFolder + SoftType + ".json"));
 
 		JsonGenerator jGenerator = jfactory.createGenerator(fos, JsonEncoding.UTF8);
 		jGenerator.writeStartObject();
 		jGenerator.writeFieldName(SoftType);
 		jGenerator.writeStartArray();
-		ObjectMapper mapper = new ObjectMapper();
 		Files.walk(Paths.get(InputFolder)).filter(p -> p.toString().endsWith(".json")).forEach(p -> {
 			try {
 
