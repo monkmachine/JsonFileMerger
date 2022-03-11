@@ -14,6 +14,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.TreeNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+
 public class JsonFileMerger {
 
 	private JsonFactory jfactory = new JsonFactory();
@@ -31,8 +32,8 @@ public class JsonFileMerger {
 		jGenerator.writeStartObject();
 		jGenerator.writeFieldName(ArrayField);
 		jGenerator.writeStartArray();
-		Files.walk(Paths.get(InputFolder)).filter(p -> p.toString().endsWith(".json")).forEach(p -> {
-			try {
+		try{Files.walk(Paths.get(InputFolder)).filter(p -> p.toString().endsWith(".json")).forEach(p -> {
+			try  {
 				InputStream jsonStream = new FileInputStream(p.toFile());
 				JsonParser jsonParser = new JsonFactory().createParser(jsonStream);
 				TreeNode treeNode = Mapper.readTree(jsonParser);
@@ -44,6 +45,11 @@ public class JsonFileMerger {
 				e.printStackTrace();
 			}
 		});
+		
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 		jGenerator.writeEndArray();
 		jGenerator.close();
 		fileOut.close();
