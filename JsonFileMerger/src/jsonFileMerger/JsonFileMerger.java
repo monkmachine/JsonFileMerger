@@ -14,7 +14,6 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.TreeNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-
 public class JsonFileMerger {
 
 	private JsonFactory jfactory = new JsonFactory();
@@ -23,31 +22,30 @@ public class JsonFileMerger {
 	private String InputFolder;
 	private JsonEncoding JSONEncoding = JsonEncoding.UTF8;
 	private ObjectMapper Mapper = new ObjectMapper();
-	
 
-	public void execute() throws IOException, IllegalArgumentException  {
+	public void execute() throws IOException, IllegalArgumentException {
 		validateConstructor();
-		FileOutputStream fileOut = new FileOutputStream(new File(OutputFolder +"/"+ ArrayField + ".json"));
+		FileOutputStream fileOut = new FileOutputStream(new File(OutputFolder + "/" + ArrayField + ".json"));
 		JsonGenerator jGenerator = jfactory.createGenerator(fileOut, JSONEncoding);
 		jGenerator.writeStartObject();
 		jGenerator.writeFieldName(ArrayField);
 		jGenerator.writeStartArray();
-		try{Files.walk(Paths.get(InputFolder)).filter(p -> p.toString().endsWith(".json")).forEach(p -> {
-			try  {
-				InputStream jsonStream = new FileInputStream(p.toFile());
-				JsonParser jsonParser = new JsonFactory().createParser(jsonStream);
-				TreeNode treeNode = Mapper.readTree(jsonParser);
-				jGenerator.setCodec(Mapper);
-				jGenerator.writeTree(treeNode);
-				jsonStream.close();
-				jsonParser.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		});
-		
-		}
-		catch (Exception e) {
+		try {
+			Files.walk(Paths.get(InputFolder)).filter(p -> p.toString().endsWith(".json")).forEach(p -> {
+				try {
+					InputStream jsonStream = new FileInputStream(p.toFile());
+					JsonParser jsonParser = new JsonFactory().createParser(jsonStream);
+					TreeNode treeNode = Mapper.readTree(jsonParser);
+					jGenerator.setCodec(Mapper);
+					jGenerator.writeTree(treeNode);
+					jsonStream.close();
+					jsonParser.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			});
+
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		jGenerator.writeEndArray();
@@ -82,17 +80,17 @@ public class JsonFileMerger {
 			JSONEncoding = JsonEncoding.UTF32_LE;
 		}
 	}
-	
-    private void validateConstructor() {
-        if(InputFolder == null ) {
-            throw new IllegalArgumentException("InputFolder");
-        }
-        if(ArrayField == null ) {
-            throw new IllegalArgumentException("ArrayField");
-        }
-        if(OutputFolder == null ) {
-            throw new IllegalArgumentException("OutputFolder");
-        }
-    }
+
+	private void validateConstructor() {
+		if (InputFolder == null) {
+			throw new IllegalArgumentException("InputFolder");
+		}
+		if (ArrayField == null) {
+			throw new IllegalArgumentException("ArrayField");
+		}
+		if (OutputFolder == null) {
+			throw new IllegalArgumentException("OutputFolder");
+		}
+	}
 
 }
