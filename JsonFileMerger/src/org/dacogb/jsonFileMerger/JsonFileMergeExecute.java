@@ -1,4 +1,4 @@
-package jsonFileMerger;
+package org.dacogb.jsonFileMerger;
 
 import java.io.IOException;
 
